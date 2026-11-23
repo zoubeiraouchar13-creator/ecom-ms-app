@@ -1,0 +1,30 @@
+<div class="page-head">
+  <h1>Assistant IA</h1>
+  <button class="btn" (click)="reset()">Nouvelle conversation</button>
+</div>
+
+<div class="chat">
+  <div class="messages" #scroller>
+    @for (m of messages(); track $index) {
+      <div class="msg" [class]="m.from">
+        <div class="bubble" [innerHTML]="format(m.text)"></div>
+      </div>
+    }
+    @if (loading()) {
+      <div class="msg agent"><div class="bubble typing">L’agent réfléchit et interroge les micro-services…</div></div>
+    }
+  </div>
+
+  @if (messages().length <= 1) {
+    <div class="suggestions">
+      @for (s of suggestions; track s) {
+        <button class="chip" (click)="send(s)">{{ s }}</button>
+      }
+    </div>
+  }
+
+  <form class="composer" (ngSubmit)="send()">
+    <input name="question" [(ngModel)]="question" placeholder="Posez votre question…" autocomplete="off" [disabled]="loading()" />
+    <button class="btn primary" type="submit" [disabled]="loading() || !question.trim()">Envoyer</button>
+  </form>
+</div>
